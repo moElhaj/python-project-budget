@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container clearfix">
+
+    <h4>Projects</h4>
+
+    {% if projects %}
+    <div class="row">
+        {% for project in projects %}
+        <div class="col s12 m6">
+            <div class="card small">
+                <div class="card-content">
+                    <span class="card-title">{{project.name}}</span>
+                    <p>Progress:</p>
+                    <div class="center">{{project.projectProgress}}%</div>
+                    <div class="progress">
+                        <div class="determinate blue lighten-2" style="width: {{project.projectProgress}}%"></div>
+                    </div>
+                    <p><strong>Description:</strong></p>
+                    <p>{{project.description}}.</p>
+                </div>
+                <div class="card-action center">
+                    <a href="{% url 'project' project.id %}">Details</a>
+                    <a href="#" class="activator">Delete</a>
+                    {% if project.due < 5 %} <span class="badge red white-text">{{project.due}} Days</span>
+                        {% else %}
+                        <span class="badge blue white-text">{{project.due}} Days</span>
+                        {% endif %}
+                </div>
+
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Delete Project<i class="material-icons right">close</i></span>
+                    <p>Are you sure you want to delete this project</p>
+                    <a href="{% url 'deleteProject' project.id %}" class="btn red lighten-1">Delete</a>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No project found</p>
+    {% endif %}
+
+</div>
+
+
+<a class="btn waves-effect right btn-small waves-light blue lighten-2" id="view-source" href="{% url 'newProject'%}">
+    <i class="material-icons white-text left">add_circle</i>
+    New Project
+</a>
+
+{% endblock %}

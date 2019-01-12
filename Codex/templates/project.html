@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <a href="{% url 'dashboard' %}"><i class="material-icons">arrow_back</i></a>
+
+    <h5>Title: {{ project.name }}</h5>
+
+    <div class="row">
+        <div class="col s12 m6 l3">
+            <div class="card center">
+                <h6 class="bold">Progress</h6>
+                <div class="center">{{project.projectProgress}}%</div>
+                <div class="progress">
+                    <div class="determinate blue lighten-2" style="width: {{project.projectProgress}}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card center">
+                <h6 class="bold">Budget</h6>
+                <h5>{{project.budget}}</h5>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card center">
+                <h6 class="bold">Budget Left</h6>
+                <h5>{{project.budgetRemaining}}</h5>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card center">
+                <h6 class="bold">Tasks</h6>
+                <h5>{{project.totalTasks}}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <div class="right">
+            <a class="modal-trigger btn waves-effect right btn-small waves-light blue lighten-2" href="#newTask">
+                <i class="material-icons white-text left">add_circle</i>
+                New Task
+            </a>
+        </div>
+    </div>
+
+
+    {% if project.tasks.all %}
+    <hr>
+
+    <table class="striped responsive-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Expense</th>
+                <th>Status</th>
+                <th>category</th>
+                <th class="center">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for task in project.tasks.all %}
+            <tr>
+                <td>{{task.name}}</td>
+                <td>{{task.expense}}$</td>
+                <td>{{task.status}}</td>
+                <td>{{task.category}}</td>
+                <td class="center">
+                    {% if not task.status == 'Finished'%}
+                    <a href="{% url 'finishTask' task.id project.id %}" class="btn waves-effect waves-light btn-small green lighten-2">Finish</a>
+                    {% else %}
+                    <a href="#" class="btn waves-effect waves-light btn-small green lighten-2 disabled">Finish</a>
+                    {% endif %}
+                    &nbsp;
+                    <a href="{% url 'deleteTask' task.id project.id %}" class="btn waves-effect waves-light btn-small red darken-1">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <p>No tasks found</p>
+    {% endif %}
+</div>
+
+
+<div id="newTask" class="modal">
+    <div class="modal-content">
+        <h4>New Task</h4>
+        <form method="POST" action="{% url 'newTask' %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="project" value="{{project.id}}">
+            <input type="hidden" name="status" value="In Progress">
+
+            <div class="row">
+
+                <div class="input-field col s6">
+                    <input id="name" name="name" type="text">
+                    <label for="name">Name</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input id="expense" name="expense" type="text" type="number">
+                    <label for="expense">Expense</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <textarea id="description" name="description" class="materialize-textarea"></textarea>
+                    <label for="description">Description</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input id="category" name="category" type="text" type="text">
+                    <label for="category">Category</label>
+                </div>
+
+
+                <div class="input-field col s12">
+                    <button type="submit" class="btn waves-effect right btn-small waves-light blue lighten-2">Add</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

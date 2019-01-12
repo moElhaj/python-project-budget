@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <a href="{% url 'dashboard' %}"><i class="material-icons">arrow_back</i></a>
+
+    <h4>New Project</h4>
+    <div class="card-panel clearfix">
+        <form method="POST" action="/project/new" class="col s12">
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="input-field col s6">
+                    <input id="name" name="name" type="text">
+                    <label for="name">Name</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input id="budget" name="budget" type="number">
+                    <label for="budget">Budget</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <textarea id="description" name="description" class="materialize-textarea"></textarea>
+                    <label for="description">Description</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input id="due_date" name="due_date" type="date">
+                    <label for="due_date">Due Date</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <button type="submit" class="btn waves-effect btn-small waves-light blue lighten-2 right">
+                        <i class="material-icons white-text left">add_circle</i>
+                        Add
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}
